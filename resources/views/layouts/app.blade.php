@@ -4,10 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{-- Meta title --}}
+    @hasSection('meta_title')
+        <title>@yield('meta_title') | {{ config('app.name') }}</title>
+    @else
+        <title>{{ config('app.name') }}</title>
+    @endif
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link href="//fonts.bunny.net" rel="dns-prefetch">
@@ -76,8 +81,44 @@
             @yield('content')
         </main>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
     @stack('cdn-footer')
     @stack('scripts')
+    <script type="text/javascript">
+        let blocks = document.getElementsByClassName('col-auto-width');
+
+        Array.from(blocks).forEach((element) => {
+            let childs = element.getElementsByTagName('div');
+            let length = childs.length;
+            let div = childs[0];
+
+            if (length === 1) {
+                div.className = 'col-lg-12 col-lg-12 col-xl-12';
+            } else if (length === 2) {
+                div.className = 'col-lg-12 col-lg-6 col-xl-6';
+                div = div.nextElementSibling;
+                div.className = 'col-lg-12 col-lg-6 col-xl-6';
+            } else {
+                for (let i = 0; i < length; i++) {
+                    if (!div) {
+                        continue;
+                    }
+
+                    className = ['col-12'];
+
+                    if (i === length - 1) {
+                        className.push('col-lg-12')
+                    } else {
+                        className.push('col-lg-6')
+                    }
+
+                    className.push('col-xl-3')
+
+                    div.className = className.join(' ');
+                    div = div.nextElementSibling;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
