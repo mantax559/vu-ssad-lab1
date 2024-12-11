@@ -89,7 +89,7 @@ class SupplierService implements SupplierServiceInterface
         Session::put(self::SESSION_KEY, $suppliers);
     }
 
-    public function getSupplier(int $supplierId): object
+    public function getById(int $supplierId): object
     {
         $suppliers = Session::get(SupplierService::SESSION_KEY, []);
 

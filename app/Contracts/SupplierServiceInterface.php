@@ -14,5 +14,5 @@ interface SupplierServiceInterface
 
     public function destroy(int $supplierId): void;
 
-    public function getSupplier(int $supplierId): object;
+    public function getById(int $supplierId): object;
 }

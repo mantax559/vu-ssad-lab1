@@ -36,14 +36,14 @@ class SupplierController extends Controller
 
     public function show(int $supplierId): View
     {
-        $supplier = $this->supplierService->getSupplier($supplierId);
+        $supplier = $this->supplierService->getById($supplierId);
 
         return view('suppliers.show', compact('supplier'));
     }
 
     public function edit(int $supplierId): View
     {
-        $supplier = $this->supplierService->getSupplier($supplierId);
+        $supplier = $this->supplierService->getById($supplierId);
 
         return view('suppliers.form', compact('supplier'));
     }
