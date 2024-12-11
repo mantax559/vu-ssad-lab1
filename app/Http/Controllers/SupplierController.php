@@ -6,11 +6,7 @@ use App\Contracts\SupplierServiceInterface;
 use App\Http\Requests\SupplierIndexRequest;
 use App\Http\Requests\SupplierStoreRequest;
 use App\Http\Requests\SupplierUpdateRequest;
-use App\Services\SupplierService;
-use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class SupplierController extends Controller
@@ -33,52 +29,36 @@ class SupplierController extends Controller
     public function store(SupplierStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
-        try {
-            $this->supplierService->store($data);
-        } catch (Exception $e) {
-            return back()->with('error', $e->getMessage())->withInput();
-        }
+        $this->supplierService->store($data);
 
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function show($supplierId): View
+    public function show(int $supplierId): View
     {
-        $suppliers = Session::get(SupplierService::SESSION_KEY, []);
-        $supplier = (object) collect($suppliers)->firstWhere('id', $supplierId);
+        $supplier = $this->supplierService->getSupplier($supplierId);
 
         return view('suppliers.show', compact('supplier'));
     }
 
-    public function edit($supplierId): View
+    public function edit(int $supplierId): View
     {
-        $suppliers = Session::get(SupplierService::SESSION_KEY, []);
-        $supplier = (object) collect($suppliers)->firstWhere('id', $supplierId);
+        $supplier = $this->supplierService->getSupplier($supplierId);
 
         return view('suppliers.form', compact('supplier'));
     }
 
-    public function update($supplierId, SupplierUpdateRequest $request): RedirectResponse
+    public function update(int $supplierId, SupplierUpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
-        try {
-            $this->supplierService->update($supplierId, $data);
-        } catch (Exception $e) {
-            return back()->with('error', $e->getMessage())->withInput();
-        }
+        $this->supplierService->update($supplierId, $data);
 
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function destroy($supplierId): RedirectResponse
+    public function destroy(int $supplierId): RedirectResponse
     {
-        try {
-            $this->supplierService->destroy($supplierId);
-        } catch (Exception $e) {
-            return back()->with('error', $e->getMessage())->withInput();
-        }
+        $this->supplierService->destroy($supplierId);
 
         return back()->with('success', __('Entry successfully deleted!'));
     }
