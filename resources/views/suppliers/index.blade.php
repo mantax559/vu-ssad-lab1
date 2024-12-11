@@ -13,74 +13,112 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row gx-3 gy-2 col-auto-width">
-                <input type="text" title="{{ __('Search') }}" name="search" id="search" class="form-control" placeholder="Search..." />
+                <x-form::input id="search" title="{{ __('Search') }}" name="search" value="{{ $filter['search'] ?? null }}" />
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between">
-                <button class="btn btn-primary" id="addSupplier">Add Supplier</button>
+                <button id="addSupplier" class="btn btn-primary">{{ __('Add Supplier') }}</button>
             </div>
         </div>
-        <div id="loading" style="display: none; text-align: center;">
+        <div id="loading" style="text-align: center; margin: 30px 0;">
             <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{ __('Loading...') }}</span>
             </div>
         </div>
-        <div class="card-body table-responsive table-card">
+        <div id="data" class="card-body table-responsive table-card" style="display: none;">
             <table class="table align-middle text-center mb-0">
                 <thead class="text-muted table-light">
                 <tr>
-                    <th class="w-0">{{ __('ID') }}</th>
-                    <th>{{ __('Name') }}</th>
+                    <th class="w-0">{{ __('Company') }}</th>
+                    <th>{{ __('Is FSC') }}</th>
+                    <th>{{ __('Responsible person') }}</th>
+                    <th>{{ __('Contact person') }}</th>
+                    <th>{{ __('Contact phone') }}</th>
                     <th>{{ __('Email') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('Billing email') }}</th>
+                    <th>{{ __('Validation / Expiry') }}</th>
+                    <th>{{ __('Updated / Created') }}</th>
+                    <th class="w-0">{{ __('Action') }}</th>
                 </tr>
                 </thead>
-                <tbody id="supplierTable">
-                <tr id="noResults" style="display: none;">
-                    <td colspan="4">{{ __('No results found.') }}</td>
-                </tr>
-                </tbody>
+                <tbody id="supplierTable"></tbody>
             </table>
         </div>
+        <div id="noResults" class="card-body" style="display: none;">
+            <div class="alert alert-info alert-border-left alert-dismissible fade show mb-0" role="alert">
+                {{ __('No result was found.') }}
+            </div>
+        </div>
         <div class="card-footer d-flex justify-content-end">
-            <ul class="pagination justify-content-center" id="pagination"></ul>
+            <ul id="pagination" class="pagination justify-content-center"></ul> {{-- TODO: Sugryzti --}}
         </div>
     </div>
 @endsection
 
 @push('modals')
-    <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+    <div id="supplierModal" class="modal fade" aria-hidden="true" aria-labelledby="supplierModalLabel" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="supplierModalLabel">Supplier Form</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 id="supplierModalLabel" class="modal-title">{{ __('Supplier Form') }}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="supplierForm">
-                        <input type="hidden" id="supplierId">
-                        <x-form::input title="{{ __('Company name') }}" name="company_name" id="company_name" value="Random Company" required />
-                        <x-form::input title="{{ __('Company code') }}" name="company_code" id="company_code" value="12345" required />
-                        <x-form::input title="{{ __('Company VAT number') }}" name="company_vat_number" id="company_vat_number" value="LT123456789" />
-                        <x-form::input title="{{ __('Company address') }}" name="company_address" id="company_address" value="Random Address" required />
-                        <x-form::input title="{{ __('Responsible person') }}" name="responsible_person" id="responsible_person" value="John Doe" required />
-                        <x-form::input title="{{ __('Contact person') }}" name="contact_person" id="contact_person" value="Jane Doe" required />
-                        <x-form::input title="{{ __('Contact phone') }}" name="contact_phone" id="contact_phone" value="+37012345678" required />
-                        <x-form::input title="{{ __('Alternate contact phone') }}" name="alternate_contact_phone" id="alternate_contact_phone" value="+37087654321" />
-                        <x-form::input title="{{ __('Email') }}" name="email" id="email" value="info@delfi.lt" required />
-                        <x-form::input title="{{ __('Alternate email') }}" name="alternate_email" id="alternate_email" value="info@delfi.lt" />
-                        <x-form::input title="{{ __('Billing email') }}" name="billing_email" id="billing_email" value="info@delfi.lt" required />
-                        <x-form::input title="{{ __('Alternate billing email') }}" name="alternate_billing_email" id="alternate_billing_email" value="info@delfi.lt" />
-                        <x-form::input title="{{ __('Certificate code') }}" name="certificate_code" id="certificate_code" value="CERT12345" required />
-                        <x-form::select title="{{ __('Is FSC') }}" name="is_fsc" id="is_fsc" required :collection="\App\Helpers\SelectHelper::booleanOptions()" />
-                        <x-form::input title="{{ __('Validation date') }}" name="validation_date" id="validation_date" type="datetime" value="2024-01-01 10:00" required />
-                        <x-form::input title="{{ __('Expiry date') }}" name="expiry_date" id="expiry_date" type="datetime" value="2025-01-01 10:00" required />
-                        <x-form::input title="{{ __('Comments') }}" name="comments" id="comments" value="Sample comment" />
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <input id="supplierId" type="hidden">
+                        <x-form::input id="company_name" class="mb-2" title="{{ __('Company name') }}" name="company_name" required />
+                        <x-form::input id="company_code" class="mb-2" title="{{ __('Company code') }}" name="company_code" required />
+                        <x-form::input id="company_vat_number" class="mb-2" title="{{ __('Company VAT number') }}" name="company_vat_number" />
+                        <x-form::input id="company_address" class="mb-2" title="{{ __('Company address') }}" name="company_address" required />
+                        <x-form::input id="responsible_person" class="mb-2" title="{{ __('Responsible person') }}" name="responsible_person" required />
+                        <x-form::input id="contact_person" class="mb-2" title="{{ __('Contact person') }}" name="contact_person" required />
+                        <x-form::input id="contact_phone" class="mb-2" title="{{ __('Contact phone') }}" name="contact_phone" required />
+                        <x-form::input id="alternate_contact_phone" class="mb-2" title="{{ __('Alternate contact phone') }}" name="alternate_contact_phone" />
+                        <x-form::input id="email" class="mb-2" title="{{ __('Email') }}" name="email" required />
+                        <x-form::input id="alternate_email" class="mb-2" title="{{ __('Alternate email') }}" name="alternate_email" />
+                        <x-form::input id="billing_email" class="mb-2" title="{{ __('Billing email') }}" name="billing_email" required />
+                        <x-form::input id="alternate_billing_email" class="mb-2" title="{{ __('Alternate billing email') }}" name="alternate_billing_email" />
+                        <x-form::input id="certificate_code" class="mb-2" title="{{ __('Certificate code') }}" name="certificate_code" required />
+                        <x-form::select id="is_fsc" class="mb-2" title="{{ __('Is FSC') }}" name="is_fsc" required :collection="\App\Helpers\SelectHelper::booleanOptions()" />
+                        <x-form::input id="validation_date" class="mb-2" title="{{ __('Validation date') }}" name="validation_date" type="datetime" required />
+                        <x-form::input id="expiry_date" class="mb-2" title="{{ __('Expiry date') }}" name="expiry_date" type="datetime" required />
+                        <x-form::input id="comments" class="mb-2" title="{{ __('Comments') }}" name="comments" />
+                        <button class="btn btn-primary w-100" type="submit">{{ __('Save') }}</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="supplierModalShow" class="modal fade" aria-hidden="true" aria-labelledby="supplierModalShowLabel" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="supplierModalShowLabel" class="modal-title">{{ __('Supplier Show') }}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Company name') }}</span>: <span id="text_company_name"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Company code') }}</span>: <span id="text_company_code"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Company VAT number') }}</span>: <span id="text_company_vat_number"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Company address') }}</span>: <span id="text_company_address"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Responsible person') }}</span>: <span id="text_responsible_person"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Contact person') }}</span>: <span id="text_contact_person"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Contact phone') }}</span>: <span id="text_contact_phone"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Alternate contact phone') }}</span>: <span id="text_alternate_contact_phone"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Email') }}</span>: <span id="text_email"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Alternate email') }}</span>: <span id="text_alternate_email"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Billing email') }}</span>: <span id="text_billing_email"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Alternate billing email') }}</span>: <span id="text_alternate_billing_email"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Certificate code') }}</span>: <span id="text_certificate_code"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Is FSC') }}</span>: <span id="text_is_fsc"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Validation date') }}</span>: <span id="text_validation_date"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Expiry date') }}</span>: <span id="text_expiry_date"></span></li>
+                        <li class="list-group-item"><span class="fw-bold">{{ __('Comments') }}</span>: <span id="text_comments"></span></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -93,22 +131,27 @@
 
         function loadSuppliers(page = 1, search = '') {
             $('#loading').show();
+            $('#noResults').hide();
+            $('#data').hide();
             $.ajax({
                 url: `${apiUrl}?page=${page}&search=${search}`,
                 type: 'GET',
                 success: function (data) {
                     $('#loading').hide();
+                    $('#data').show();
                     if (data && data.data && data.data.data && Array.isArray(data.data.data) && data.data.data.length > 0) {
                         $('#noResults').hide();
+                        $('#data').show();
                         renderSuppliers(data.data.data);
                     } else {
                         $('#noResults').show();
-                        $('#supplierTable').find('tr:not(#noResults)').remove();
+                        $('#data').hide();
                     }
                     renderPagination(data);
                 },
-                error: function() {
+                error: function () {
                     $('#loading').hide();
+                    $('#data').show();
                     alert('Failed to load suppliers. Please try again.');
                 }
             });
@@ -116,16 +159,46 @@
 
         function renderSuppliers(suppliers) {
             const table = $('#supplierTable');
-            table.find('tr:not(#noResults)').remove();
+            $('#noResults').hide();
+            $('#data').show();
+            table.find('tr').remove();
             suppliers.forEach(supplier => {
                 table.append(`
                 <tr>
-                    <td>${supplier.id}</td>
-                    <td>${supplier.name}</td>
-                    <td>${supplier.email}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning edit" data-id="${supplier.id}">Edit</button>
-                        <button class="btn btn-sm btn-danger delete" data-id="${supplier.id}">Delete</button>
+                        <div>${supplier.company_name}</div>
+                        <div>CC: ${supplier.company_code}</div>
+                        <div>VAT: ${supplier.company_vat_number || '-'}</div>
+                    </td>
+                    <td>${supplier.is_fsc ? 'Yes' : 'No'}</td>
+                    <td>${supplier.responsible_person}</td>
+                    <td>${supplier.contact_person}</td>
+                    <td>
+                        <div>${supplier.contact_phone}</div>
+                        <div>${supplier.alternate_contact_phone || ''}</div>
+                    </td>
+                    <td>
+                        <div>${supplier.email}</div>
+                        <div>${supplier.alternate_email || ''}</div>
+                    </td>
+                    <td>
+                        <div>${supplier.billing_email}</div>
+                        <div>${supplier.alternate_billing_email || ''}</div>
+                    </td>
+                    <td>
+                        <div>${supplier.validation_date}</div>
+                        <div>${supplier.expiry_date}</div>
+                    </td>
+                    <td>
+                        <div>${supplier.updated_at}</div>
+                        <div>${supplier.created_at}</div>
+                    </td>
+                    <td>
+                        <div class="btn-group-vertical">
+                            <button class="btn btn-sm btn-outline-primary show" data-id="${supplier.id}">Show</button>
+                            <button class="btn btn-sm btn-outline-primary edit" data-id="${supplier.id}">Edit</button>
+                            <button class="btn btn-sm btn-primary delete" data-id="${supplier.id}">Delete</button>
+                        </div>
                     </td>
                 </tr>
             `);
@@ -136,19 +209,19 @@
             const pagination = $('#pagination');
             pagination.empty();
             for (let i = 1; i <= data.last_page; i++) {
-                pagination.append(`<li class="page-item ${i === data.current_page ? 'active' : ''}"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`);
+                pagination.append(`<li class="page-item ${i === data.current_page ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
             }
         }
 
         $(document).on('click', '.page-link', function (e) {
             e.preventDefault();
-            const page = $(this).data('page');
-            const search = $('#search').val();
+            let page = $(this).data('page');
+            let search = $('#search').val();
             loadSuppliers(page, search);
         });
 
         $('#search').on('input', function () {
-            const search = $(this).val();
+            let search = $(this).val();
             loadSuppliers(1, search);
         });
 
@@ -161,30 +234,61 @@
             }).modal('show');
         });
 
-        $(document).on('click', '.edit', function () {
-            const id = $(this).data('id');
+        $(document).on('click', '.show', function () {
+            let id = $(this).data('id');
             $.ajax({
-                url: `${apiUrl}/${id}`,
-                type: 'PUT',
+                url: `${apiUrl}/${id}/show`,
+                type: 'GET',
                 success: function (data) {
-                    $('#supplierId').val(data.id);
-                    $('#company_name').val(data.company_name);
-                    $('#company_code').val(data.company_code);
-                    $('#company_vat_number').val(data.company_vat_number);
-                    $('#company_address').val(data.company_address);
-                    $('#responsible_person').val(data.responsible_person);
-                    $('#contact_person').val(data.contact_person);
-                    $('#contact_phone').val(data.contact_phone);
-                    $('#alternate_contact_phone').val(data.alternate_contact_phone);
-                    $('#email').val(data.email);
-                    $('#alternate_email').val(data.alternate_email);
-                    $('#billing_email').val(data.billing_email);
-                    $('#alternate_billing_email').val(data.alternate_billing_email);
-                    $('#certificate_code').val(data.certificate_code);
-                    $('#is_fsc').val(data.is_fsc);
-                    $('#validation_date').val(data.validation_date);
-                    $('#expiry_date').val(data.expiry_date);
-                    $('#comments').val(data.comments);
+                    $('#text_company_name').text(data.data.company_name);
+                    $('#text_company_code').text(data.data.company_code);
+                    $('#text_company_vat_number').text(data.data.company_vat_number);
+                    $('#text_company_address').text(data.data.company_address);
+                    $('#text_responsible_person').text(data.data.responsible_person);
+                    $('#text_contact_person').text(data.data.contact_person);
+                    $('#text_contact_phone').text(data.data.contact_phone);
+                    $('#text_alternate_contact_phone').text(data.data.alternate_contact_phone);
+                    $('#text_email').text(data.data.email);
+                    $('#text_alternate_email').text(data.data.alternate_email);
+                    $('#text_billing_email').text(data.data.billing_email);
+                    $('#text_alternate_billing_email').text(data.data.alternate_billing_email);
+                    $('#text_certificate_code').text(data.data.certificate_code);
+                    $('#text_validation_date').text(data.data.validation_date);
+                    $('#text_expiry_date').text(data.data.expiry_date);
+                    $('#text_comments').text(data.data.comments);
+                    $('#text_is_fsc').text(data.data.is_fsc ? 'Yes' : 'No');
+                    $('#supplierModalShow').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    }).modal('show');
+                }
+            });
+        });
+
+        $(document).on('click', '.edit', function () {
+            let id = $(this).data('id');
+            $.ajax({
+                url: `${apiUrl}/${id}/show`,
+                type: 'GET',
+                success: function (data) {
+                    $('#supplierId').val(data.data.id);
+                    $('#company_name').val(data.data.company_name);
+                    $('#company_code').val(data.data.company_code);
+                    $('#company_vat_number').val(data.data.company_vat_number);
+                    $('#company_address').val(data.data.company_address);
+                    $('#responsible_person').val(data.data.responsible_person);
+                    $('#contact_person').val(data.data.contact_person);
+                    $('#contact_phone').val(data.data.contact_phone);
+                    $('#alternate_contact_phone').val(data.data.alternate_contact_phone);
+                    $('#email').val(data.data.email);
+                    $('#alternate_email').val(data.data.alternate_email);
+                    $('#billing_email').val(data.data.billing_email);
+                    $('#alternate_billing_email').val(data.data.alternate_billing_email);
+                    $('#certificate_code').val(data.data.certificate_code);
+                    $('#validation_date').val(data.data.validation_date);
+                    $('#expiry_date').val(data.data.expiry_date);
+                    $('#comments').val(data.data.comments);
+                    $('#is_fsc').val(data.data.is_fsc).trigger('change');
                     $('#supplierModal').modal({
                         backdrop: 'static',
                         keyboard: false
@@ -195,13 +299,13 @@
 
         $(document).on('click', '.delete', function () {
             if (confirm('Are you sure?')) {
-                const id = $(this).data('id');
+                let id = $(this).data('id');
                 $.ajax({
                     url: `${apiUrl}/${id}`,
-                    type: 'POST', // Change to POST for Laravel compatibility
+                    type: 'POST',
                     data: {
-                        _method: 'DELETE', // Specify the actual HTTP method
-                        _token: '{{ csrf_token() }}' // Include the CSRF token
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}'
                     },
                     success: function () {
                         loadSuppliers();
@@ -217,21 +321,19 @@
         $('#supplierForm').on('submit', function (e) {
             e.preventDefault();
 
-            const id = $('#supplierId').val();
-            const type = id ? 'PUT' : 'POST';
-            const url = id ? `${apiUrl}/${id}` : apiUrl;
+            let id = $('#supplierId').val();
+            let type = id ? 'PUT' : 'POST';
+            let url = id ? `${apiUrl}/${id}` : apiUrl;
+            console.log(id);
 
-            // Sukurti duomenų objektą ir pridėti CSRF žetoną
-            const formData = $(this).serializeArray();
-            formData.push({ name: '_token', value: '{{ csrf_token() }}' });
+            let formData = $(this).serializeArray();
+            formData.push({name: '_token', value: '{{ csrf_token() }}'});
 
-            // Konvertuoti duomenis į objekto formatą
-            const data = {};
+            let data = {};
             formData.forEach(item => {
                 data[item.name] = item.value;
             });
 
-            // Pateikti AJAX užklausą
             $.ajax({
                 url: url,
                 type: type,
