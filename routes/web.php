@@ -58,8 +58,8 @@ Route::group(['as' => 'suppliers.'], function () {
     Route::get('suppliers', [SupplierController::class, 'index'])->name('index');
     Route::get('suppliers/create', [SupplierController::class, 'create'])->name('create');
     Route::post('suppliers', [SupplierController::class, 'store'])->name('store');
-    Route::get('suppliers/{supplier}/show', [SupplierController::class, 'show'])->name('show');
-    Route::get('suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('edit');
-    Route::put('suppliers/{supplier}', [SupplierController::class, 'update'])->name('update');
-    Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('destroy');
+    Route::get('suppliers/{id}/show', [SupplierController::class, 'show'])->name('show');
+    Route::get('suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('edit');
+    Route::put('suppliers/{id}', [SupplierController::class, 'update'])->name('update');
+    Route::delete('suppliers/{id}', [SupplierController::class, 'destroy'])->name('destroy');
 });

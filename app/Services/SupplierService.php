@@ -65,13 +65,13 @@ class SupplierService implements SupplierServiceInterface
         return (object) $data;
     }
 
-    public function update(int $supplierId, array $data): object
+    public function update(int $id, array $data): object
     {
         unset($data['action']);
         $suppliers = Session::get(self::SESSION_KEY, []);
 
         foreach ($suppliers as &$supplier) {
-            if (cmprint($supplier['id'], $supplierId)) {
+            if (cmprint($supplier['id'], $id)) {
                 $supplier = array_merge($supplier, $data, ['updated_at' => now()->toDateTimeString()]);
                 break;
             }
@@ -82,17 +82,17 @@ class SupplierService implements SupplierServiceInterface
         return (object) $supplier;
     }
 
-    public function destroy(int $supplierId): void
+    public function destroy(int $id): void
     {
         $suppliers = Session::get(self::SESSION_KEY, []);
-        $suppliers = array_filter($suppliers, fn ($supplier) => ! cmprint($supplier['id'], $supplierId));
+        $suppliers = array_filter($suppliers, fn ($supplier) => ! cmprint($supplier['id'], $id));
         Session::put(self::SESSION_KEY, $suppliers);
     }
 
-    public function getById(int $supplierId): object
+    public function getById(int $id): object
     {
         $suppliers = Session::get(SupplierService::SESSION_KEY, []);
 
-        return (object) collect($suppliers)->firstWhere('id', $supplierId);
+        return (object) collect($suppliers)->firstWhere('id', $id);
     }
 }
