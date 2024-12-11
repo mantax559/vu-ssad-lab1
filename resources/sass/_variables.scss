@@ -1,7 +1,77 @@
-// Body
-$body-bg: #f8fafc;
+// Theme
+$theme: "default-template" !default;
 
-// Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+// Color System
+$black: #000 !default;
+$white: #fff !default;
+$gray-100: #f3f3f3 !default;
+$gray-200: #e7e7e7 !default;
+$gray-300: #dadada !default;
+$gray-400: #cecece !default;
+$gray-500: #bdbdbd !default;
+$gray-600: #969696 !default;
+$gray-700: #575757 !default;
+$gray-800: #3b3b3b !default;
+$gray-900: #2a2a2a !default;
+$blue: #007BCC !default;
+$indigo: #5A5DA7 !default;
+$purple: #9A7FBF !default;
+$pink: #FF61A6 !default;
+$red: #FF4D4D !default;
+$orange: #FF8C42 !default;
+$yellow: #FFC107 !default;
+$green: #4CAF50 !default;
+$teal: #64D8CB !default;
+$cyan: #6F42C1 !default;
+
+// Semantic Colors ($primary and $secondary updated automatically from the database)
+$primary: #132a38 !default;
+$secondary: #537f88 !default;
+$success: $green !default;
+$info: $blue !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-200 !default;
+$dark: $gray-800 !default;
+
+// Fonts
+$font-family-sans-serif: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$font-size-base: 1rem;
+$font-weight-base: 500;
+$headings-font-weight: 500 !default;
+$line-height-base: 1.25;
+
+// Body
+$body-bg: $white;
+$body-color: $gray-800 !default;
+
+// Navbar
+$navbar-dark-hover-color: rgba($white, 1) !default;
+$navbar-light-hover-color: rgba($black, .9) !default;
+
+// Alerts
+$alert-border-width: 0 !default;
+
+// Progress Bars
+$progress-height: .5rem !default;
+
+// Table
+$table-hover-bg: $gray-100;
+
+// Dropdown
+$dropdown-link-active-bg: $secondary;
+$dropdown-padding-y: 0;
+$dropdown-spacer: .5rem;
+
+// Breadcrumb
+$breadcrumb-divider: quote("/");
+
+// Modal
+$modal-footer-border-width: 0px;
+$modal-header-border-width: 0px;
+
+// Options
+$enable-rounded: false !default;
+
+// Miscellaneous
+$min-contrast-ratio: 2.6 !default;
