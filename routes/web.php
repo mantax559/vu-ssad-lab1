@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
-use Mantax559\LaravelTranslations\Controllers\LanguageController;
 
 // Authentication routes
 Route::controller(LoginController::class)->group(function () {
@@ -43,6 +42,16 @@ Route::name('verification.')->controller(VerificationController::class)->group(f
 // Other routes
 Route::controller(HomeController::class)->group(function () {
     Route::get(trans('routes.home'), 'index')->name('home');
+});
+
+Route::get(trans('routes.default'), function () {
+    return view('welcome');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::controller(HomeController::class)->group(function () {
+        Route::get(trans('routes.home'), 'index')->name('home');
+    });
 });
 
 Route::group(['as' => 'suppliers.'], function () {

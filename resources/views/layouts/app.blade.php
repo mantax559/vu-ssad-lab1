@@ -1,7 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    {{-- Character Set Declaration --}}
     <meta charset="utf-8">
+
+    {{-- Viewport Meta Tag --}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- Meta title --}}
@@ -11,17 +14,23 @@
         <title>{{ config('app.name') }}</title>
     @endif
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Canonical Tag --}}
+    <link href="{{ url()->current() }}" rel="canonical">
 
-    <!-- Fonts -->
-    <link href="//fonts.bunny.net" rel="dns-prefetch">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}}">
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{-- Font awesome --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
 
+    {{-- jQuery --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+
+    {{-- CDN --}}
     @stack('cdn-header')
+
+    {{-- SCSS, JS --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
     <div id="app">
@@ -35,14 +44,8 @@
                 </button>
 
                 <div id="navbarSupportedContent" class="collapse navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav me-auto"></ul>
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
@@ -76,14 +79,13 @@
                 </div>
             </div>
         </nav>
-
         <main class="py-4">
             <div class="container-fluid">
             @yield('content')
             </div>
         </main>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
+    @stack('modals')
     @stack('cdn-footer')
     @stack('scripts')
     <script type="text/javascript">

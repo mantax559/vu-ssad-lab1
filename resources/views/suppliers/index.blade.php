@@ -14,7 +14,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="row gx-3 gy-2 col-auto-width">
-                    <x-form::input title="{{ __('Search') }}" name="search" value="{{ $filter['search'] ?? null }}"/>
+                    <x-form::input title="{{ __('Search') }}" name="search" value="{{ $filter['search'] ?? null }}" />
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <x-index-buttons route-create="{{ route('suppliers.create') }}" route-index="{{ route('suppliers.index') }}"></x-index-buttons>
-                    <x-pagination::header :paginator="$suppliers->appends($filter)"/>
+                    <x-pagination::header :paginator="$suppliers->appends($filter)" />
                 </div>
             </div>
             @if($suppliers->count())
@@ -86,7 +86,7 @@
                     </table>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <x-pagination::footer :paginator="$suppliers->appends($filter)"/>
+                    <x-pagination::footer :paginator="$suppliers->appends($filter)" />
                 </div>
             @else
                 <div class="card-body">
