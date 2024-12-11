@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SupplierIndexRequest;
-use App\Http\Requests\SupplierStoreRequest;
-use App\Http\Requests\SupplierUpdateRequest;
-use App\Models\Supplier;
+use App\Contracts\SupplierServiceInterface;
 use App\Services\SupplierService;
 use Exception;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Mantax559\LaravelHelpers\Helpers\RedirectHelper;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
 class SupplierController extends Controller
 {
-    public function __construct(private readonly SupplierService $supplierService) {}
+    public function __construct(private readonly SupplierServiceInterface $supplierService) {}
 
-    public function index(SupplierIndexRequest $request): View
+    public function index(Request $request): View
     {
-        $filter = $request->validated();
+        $filter = $request->all();
         $suppliers = $this->supplierService->list($filter);
 
         return view('suppliers.index', compact('filter', 'suppliers'));
@@ -29,48 +27,54 @@ class SupplierController extends Controller
         return view('suppliers.form');
     }
 
-    public function store(SupplierStoreRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $data = $request->validated();
+        $data = $request->all();
 
         try {
             $this->supplierService->store($data);
         } catch (Exception $e) {
-            return back()->with('error', $this->resolveExceptionMessage($e))->withInput();
+            return back()->with('error', $e->getMessage())->withInput();
         }
 
-        return redirect(RedirectHelper::getUrl(Supplier::class, $data['action']))->with('success', __('Entry successfully saved!'));
+        return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function show(Supplier $supplier): View
+    public function show($supplierId): View
     {
+        $suppliers = Session::get(SupplierService::SESSION_KEY, []);
+        $supplier = (object) collect($suppliers)->firstWhere('id', $supplierId);
+
         return view('suppliers.show', compact('supplier'));
     }
 
-    public function edit(Supplier $supplier): View
+    public function edit($supplierId): View
     {
+        $suppliers = Session::get(SupplierService::SESSION_KEY, []);
+        $supplier = (object) collect($suppliers)->firstWhere('id', $supplierId);
+
         return view('suppliers.form', compact('supplier'));
     }
 
-    public function update(Supplier $supplier, SupplierUpdateRequest $request): RedirectResponse
+    public function update($supplierId, Request $request): RedirectResponse
     {
-        $data = $request->validated();
+        $data = $request->all();
 
         try {
-            $this->supplierService->update($supplier, $data);
+            $this->supplierService->update($supplierId, $data);
         } catch (Exception $e) {
-            return back()->with('error', $this->resolveExceptionMessage($e))->withInput();
+            return back()->with('error', $e->getMessage())->withInput();
         }
 
-        return redirect(RedirectHelper::getUrl(Supplier::class, $data['action']))->with('success', __('Entry successfully saved!'));
+        return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function destroy(Supplier $supplier): RedirectResponse
+    public function destroy($supplierId): RedirectResponse
     {
         try {
-            $this->supplierService->destroy($supplier);
+            $this->supplierService->destroy($supplierId);
         } catch (Exception $e) {
-            return back()->with('error', $this->resolveExceptionMessage($e))->withInput();
+            return back()->with('error', $e->getMessage())->withInput();
         }
 
         return back()->with('success', __('Entry successfully deleted!'));

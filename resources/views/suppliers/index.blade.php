@@ -75,8 +75,8 @@
                                 </td>
                                 <td>
                                     <div class="btn-group-vertical">
-                                        <a class="btn btn-sm btn-outline-primary" href="{{ route('suppliers.show', $supplier) }}">{{ __('Show') }}</a>
-                                        <a class="btn btn-sm btn-outline-primary" href="{{ route('suppliers.edit', $supplier) }}">{{ __('Edit') }}</a>
+                                        <a class="btn btn-sm btn-outline-primary" href="{{ route('suppliers.show', $supplier->id) }}">{{ __('Show') }}</a>
+                                        <a class="btn btn-sm btn-outline-primary" href="{{ route('suppliers.edit', $supplier->id) }}">{{ __('Edit') }}</a>
                                         <x-form::modal-button id="delete{{ $index }}" class="btn btn-sm btn-primary">{{ __('Delete') }}</x-form::modal-button>
                                     </div>
                                 </td>
@@ -101,7 +101,7 @@
 
 @push('modals')
     @foreach($suppliers as $index => $supplier)
-        <x-form::modal id="delete{{ $index }}" title="{{ __('Delete entry') }}" action="{{ route('suppliers.destroy', $supplier) }}" method="DELETE" submitText="{{ __('Delete') }}">
+        <x-form::modal id="delete{{ $index }}" title="{{ __('Delete entry') }}" action="{{ route('suppliers.destroy', $supplier->id) }}" method="DELETE" submitText="{{ __('Delete') }}">
             {{ __('Are you sure you want to remove this entry?') }}
         </x-form::modal>
     @endforeach

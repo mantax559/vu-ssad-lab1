@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Log;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,7 +37,7 @@ class Controller extends BaseController
 
     private function logErrorAndGetGenericMessage($exception): string
     {
-        $errorCode = Log::error($exception->getMessage());
+        info($exception->getMessage());
 
         return __('An error has occurred, apologies for the inconvenience. If you encounter an error, please inform the administrator and provide the error code: :error_code', ['error_code' => $errorCode]);
     }

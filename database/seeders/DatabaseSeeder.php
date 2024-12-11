@@ -6,12 +6,5 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run(): void
-    {
-        $this->call([
-            UserSeeder::class,
-            SettingSeeder::class,
-            SupplierSeeder::class,
-        ]);
-    }
+    public function run(): void {}
 }

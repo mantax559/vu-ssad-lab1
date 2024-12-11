@@ -35,7 +35,5 @@ return [
     | of records to insert into the database.
     |
     */
-    'base_seeding_sizes' => [
-        'suppliers' => 200,
-    ],
+    'base_seeding_sizes' => [],
 ];

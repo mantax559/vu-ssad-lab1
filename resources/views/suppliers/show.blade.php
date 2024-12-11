@@ -6,7 +6,7 @@
             <a href="{{ route('home') }}">{{ __('Home') }}</a>
         @endslot
         @slot('parent')
-            <a href="{{ session(\Mantax559\LaravelHelpers\Helpers\SessionHelper::getUrlKey(\App\Models\Supplier::class)) }}">{{ __('Suppliers') }}</a>
+            <a href="{{ route('suppliers.index') }}">{{ __('Suppliers') }}</a>
         @endslot
         @slot('title')
             {{ __('Show supplier') }}

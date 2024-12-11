@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\SupplierServiceInterface;
+use App\Services\SupplierService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Other
-        // ...
+        $this->app->bind(SupplierServiceInterface::class, SupplierService::class);
 
         // Default
         if ($this->app->isLocal()) {
