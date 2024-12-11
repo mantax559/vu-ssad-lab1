@@ -1,0 +1,23 @@
+{
+    "_comment1": "Setting translations",
+
+    "_comment2": "Enum translations",
+
+    "_comment3": "Route translations",
+    "routes.login": "login",
+    "routes.logout": "logout",
+    "routes.register": "register",
+    "routes.password.request": "reset-password",
+    "routes.password.email": "email-password",
+    "routes.password.reset": "reset-password/{token}",
+    "routes.password.update": "reset-password",
+    "routes.password.confirm": "confirm-password",
+    "routes.verification.notice": "verify-email",
+    "routes.verification.verify": "verify-email/{id}/{hash}",
+    "routes.verification.resend": "resend-email",
+    "routes.language": "language/{locale}",
+    "routes.default": "/",
+    "routes.home": "home",
+
+    "_comment4": "Other translations"
+}

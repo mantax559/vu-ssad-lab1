@@ -15,6 +15,8 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    @stack('cdn-header')
 </head>
 <body>
     <div id="app">
@@ -74,5 +76,8 @@
             @yield('content')
         </main>
     </div>
+
+    @stack('cdn-footer')
+    @stack('scripts')
 </body>
 </html>
