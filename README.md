@@ -1,66 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Supplier Management System (Database Integration)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Task Description
 
-## About Laravel
+This project extends the Supplier Management System to include a database layer, using MySQL as the database and implementing the Repository Pattern for data management.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. **Implement DB layer by using ORM or plain SQL with Repository pattern**  
+   The database layer is implemented using Laravel Eloquent. All CRUD operations for the Supplier entity are managed through a repository class. Below is an example of how the logic was rewritten to interact with the MySQL database:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+   ```php
+    namespace App\Services;
+    
+    use App\Contracts\SupplierServiceInterface;
+    use App\Models\Supplier;
+    use Illuminate\Pagination\LengthAwarePaginator;
+    use Mantax559\LaravelHelpers\Helpers\SessionHelper;
+    
+    class SupplierService implements SupplierServiceInterface
+    {
+        public function getAll(array $filter): LengthAwarePaginator
+        {
+            session()->put(SessionHelper::getUrlKey(Supplier::class), request()->fullUrl());
+    
+            return Supplier::query()
+                ->when(isset($filter['search']), fn ($q) => $q->whereLike([
+                    'name',
+                    'code',
+                    'vat_code',
+                    'address',
+                    'responsible_person',
+                    'contact_person',
+                    'contact_phone',
+                    'alternate_contact_phone',
+                    'email',
+                    'alternate_email',
+                    'billing_email',
+                    'alternate_billing_email',
+                    'certificate_code',
+                    'comments',
+                ], $filter['search']))
+                ->orderByDesc('id')
+                ->paginate(setting('paginate'))
+                ->onEachSide(setting('on_each_side'));
+        }
+    
+        public function store(array $data): Supplier
+        {
+            unset($data['action']);
+    
+            return Supplier::create($data);
+        }
+    
+        public function update(Supplier $supplier, array $data): Supplier
+        {
+            unset($data['action']);
+    
+            $supplier->update($data);
+    
+            return $supplier;
+        }
+    
+        public function destroy(Supplier $supplier): void
+        {
+            $supplier->delete();
+        }
+    
+        public function getById(int $id): Supplier
+        {
+            return Supplier::query()->findOrFail($id);
+        }
+    }
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Demonstrate 1 business entity creation, reading, editing, deleting**  
+   CRUD operations for the Supplier entity are demonstrated through the API endpoints. These endpoints utilize the repository layer to perform database operations.
 
-## Learning Laravel
+3. **Business entity should contain at least 4 editable properties**  
+   The Supplier entity includes several editable properties, such as `company_name`, `company_code`, `email`, and `contact_person`, among others.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. **Integrate 1.A, 1.B and 1.C alltogether (website uses API to manipulate data, where API uses DB layer to manipulate data in database)**  
+   The website integrates all components, using the following flow:  
+   - The website frontend sends requests to the API.  
+   - The API interacts with the database through the repository layer, leveraging Laravel's Eloquent ORM to manipulate data in MySQL.  
+   - Changes made in the database are reflected on the website frontend.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Laravel Installation Instructions
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To set up and run this Laravel project, follow these steps:
 
-## Laravel Sponsors
+1. **Clone the Repository**  
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Install Dependencies**  
+   Ensure Composer is installed, then run:  
+   ```bash
+   composer install
+   ```
 
-### Premium Partners
+3. **Set Up Environment**  
+   Configure environment variables by copying the `.env.example` file to `.env` and adjusting settings such as database connection and application key.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. **Migrate Database**  
+   Run the database migrations to set up the required tables:  
+   ```bash
+   php artisan migrate
+   ```
 
-## Contributing
+5. **Generate Application Key**  
+   ```bash
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Run the Application**  
+   Start the Laravel server:  
+   ```bash
+   php artisan serve
+   ```
 
-## Code of Conduct
+7. **Access the Application**  
+   Navigate to:  
+   ```
+   http://127.0.0.1:8000
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The application is now fully integrated with a database backend, ready to manage suppliers using API and repository patterns.
