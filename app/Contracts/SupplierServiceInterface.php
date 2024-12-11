@@ -10,7 +10,9 @@ interface SupplierServiceInterface
 
     public function store(array $data): object;
 
-    public function update($supplierId, array $data): object;
+    public function update(int $supplierId, array $data): object;
 
-    public function destroy($supplierId): void;
+    public function destroy(int $supplierId): void;
+
+    public function getSupplier(int $supplierId): object;
 }
