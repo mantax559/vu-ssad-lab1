@@ -33,30 +33,30 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function show(int $supplierId): View
+    public function show(int $id): View
     {
-        $supplier = $this->supplierService->getById($supplierId);
+        $supplier = $this->supplierService->getById($id);
 
         return view('suppliers.show', compact('supplier'));
     }
 
-    public function edit(int $supplierId): View
+    public function edit(int $id): View
     {
-        $supplier = $this->supplierService->getById($supplierId);
+        $supplier = $this->supplierService->getById($id);
 
         return view('suppliers.form', compact('supplier'));
     }
 
-    public function update(int $supplierId, SupplierUpdateRequest $request): RedirectResponse
+    public function update(int $id, SupplierUpdateRequest $request): RedirectResponse
     {
-        $this->supplierService->update($supplierId, $request->validated());
+        $this->supplierService->update($id, $request->validated());
 
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
 
-    public function destroy(int $supplierId): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        $this->supplierService->destroy($supplierId);
+        $this->supplierService->destroy($id);
 
         return back()->with('success', __('Entry successfully deleted!'));
     }
