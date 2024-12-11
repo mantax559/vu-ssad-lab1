@@ -40,10 +40,6 @@ Route::name('verification.')->controller(VerificationController::class)->group(f
 });
 
 // Other routes
-Route::controller(HomeController::class)->group(function () {
-    Route::get(trans('routes.home'), 'index')->name('home');
-});
-
 Route::get(trans('routes.default'), function () {
     return view('welcome');
 });
