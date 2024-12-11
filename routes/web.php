@@ -48,3 +48,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get(trans('routes.home'), 'index')->name('home');
     });
 });
+
+Route::group(['as' => 'suppliers.'], function () {
+    Route::get('suppliers', [\App\Http\Controllers\SupplierController::class, 'index'])->name('index');
+});
+
+Route::group(['as' => 'api.suppliers.'], function () {
+    Route::get('api/suppliers', [\App\Http\Controllers\Api\SupplierController::class, 'index'])->name('index');
+    Route::post('api/suppliers', [\App\Http\Controllers\Api\SupplierController::class, 'store'])->name('store');
+    Route::get('api/suppliers/{id}/show', [\App\Http\Controllers\Api\SupplierController::class, 'show'])->name('show');
+    Route::put('api/suppliers/{id}', [\App\Http\Controllers\Api\SupplierController::class, 'update'])->name('update');
+    Route::delete('api/suppliers/{id}', [\App\Http\Controllers\Api\SupplierController::class, 'destroy'])->name('destroy');
+});
