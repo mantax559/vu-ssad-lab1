@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
@@ -34,4 +36,32 @@ class Supplier extends Model
     ];
 
     public $timestamps = true;
+
+    protected function validationDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value)->toDateTimeString(),
+        );
+    }
+
+    protected function expiryDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value)->toDateTimeString(),
+        );
+    }
+
+    protected function updatedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value)->toDateTimeString(),
+        );
+    }
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Carbon::parse($value)->toDateTimeString(),
+        );
+    }
 }

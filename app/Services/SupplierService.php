@@ -15,10 +15,10 @@ class SupplierService implements SupplierServiceInterface
 
         return Supplier::query()
             ->when(isset($filter['search']), fn ($q) => $q->whereLike([
-                'name',
-                'code',
-                'vat_code',
-                'address',
+                'company_name',
+                'company_code',
+                'company_vat_number',
+                'company_address',
                 'responsible_person',
                 'contact_person',
                 'contact_phone',
@@ -37,26 +37,26 @@ class SupplierService implements SupplierServiceInterface
 
     public function store(array $data): Supplier
     {
-        unset($data['action']);
-
         return Supplier::create($data);
     }
 
-    public function update(Supplier $supplier, array $data): Supplier
+    public function update(string $id, array $data): Supplier
     {
-        unset($data['action']);
+        $supplier = $this->getById($id);
 
         $supplier->update($data);
 
         return $supplier;
     }
 
-    public function destroy(Supplier $supplier): void
+    public function destroy(string $id): void
     {
+        $supplier = $this->getById($id);
+
         $supplier->delete();
     }
 
-    public function getById(int $id): Supplier
+    public function getById(string $id): Supplier
     {
         return Supplier::query()->findOrFail($id);
     }

@@ -36,7 +36,7 @@ class SupplierController extends Controller
         return response()->json(['message' => 'OK', 'data' => $supplier], 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
             $supplier = $this->supplierService->getById($id);
@@ -47,7 +47,7 @@ class SupplierController extends Controller
         return response()->json(['message' => 'OK', 'data' => $supplier]);
     }
 
-    public function update(SupplierUpdateRequest $request, int $id): JsonResponse
+    public function update(SupplierUpdateRequest $request, string $id): JsonResponse
     {
         try {
             $supplier = $this->supplierService->update($id, $request->validated());
@@ -58,7 +58,7 @@ class SupplierController extends Controller
         return response()->json(['message' => 'OK', 'data' => $supplier]);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->supplierService->destroy($id);
