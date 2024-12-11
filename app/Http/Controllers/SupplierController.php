@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\SupplierServiceInterface;
+use App\Http\Requests\SupplierIndexRequest;
+use App\Http\Requests\SupplierStoreRequest;
+use App\Http\Requests\SupplierUpdateRequest;
 use App\Services\SupplierService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
@@ -14,9 +16,9 @@ class SupplierController extends Controller
 {
     public function __construct(private readonly SupplierServiceInterface $supplierService) {}
 
-    public function index(Request $request): View
+    public function index(SupplierIndexRequest $request): View
     {
-        $filter = $request->all();
+        $filter = $request->validated();
         $suppliers = $this->supplierService->list($filter);
 
         return view('suppliers.index', compact('filter', 'suppliers'));
@@ -27,9 +29,9 @@ class SupplierController extends Controller
         return view('suppliers.form');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(SupplierStoreRequest $request): RedirectResponse
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         try {
             $this->supplierService->store($data);
@@ -56,9 +58,9 @@ class SupplierController extends Controller
         return view('suppliers.form', compact('supplier'));
     }
 
-    public function update($supplierId, Request $request): RedirectResponse
+    public function update($supplierId, SupplierUpdateRequest $request): RedirectResponse
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         try {
             $this->supplierService->update($supplierId, $data);
