@@ -165,7 +165,7 @@
             const id = $(this).data('id');
             $.ajax({
                 url: `${apiUrl}/${id}`,
-                type: 'GET',
+                type: 'PUT',
                 success: function (data) {
                     $('#supplierId').val(data.id);
                     $('#company_name').val(data.company_name);
@@ -198,9 +198,17 @@
                 const id = $(this).data('id');
                 $.ajax({
                     url: `${apiUrl}/${id}`,
-                    type: 'DELETE',
+                    type: 'POST', // Change to POST for Laravel compatibility
+                    data: {
+                        _method: 'DELETE', // Specify the actual HTTP method
+                        _token: '{{ csrf_token() }}' // Include the CSRF token
+                    },
                     success: function () {
                         loadSuppliers();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX error: ", textStatus, errorThrown);
+                        alert('An error occurred while processing the request.');
                     }
                 });
             }
