@@ -1,66 +1,298 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Supplier Management System
 
-## About Laravel
+## Task Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This project demonstrates a Supplier Management System built using the Laravel framework, adhering to the MVC architectural pattern. Below are the implemented features based on the provided requirements:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Create MVC, MVU or MVVM architectural pattern driven web site**:  
+   The project is built using Laravel, which natively supports the MVC architecture.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Site should allow creating, editing, viewing and deleting of at least one entity that is the main focus of business aplication (no persistence required)**:  
+   CRUD (Create, Read, Update, Delete) operations are implemented for managing supplier entities. The data is stored in the session for simplicity. For example, the `update` method in the `SupplierService` class updates a supplier as follows:
 
-## Learning Laravel
+   ```php
+   public function update(int $id, array $data): object
+   {
+       unset($data['action']);
+       $suppliers = Session::get(self::SESSION_KEY, []);
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+       foreach ($suppliers as &$supplier) {
+           if (cmprint($supplier['id'], $id)) {
+               $supplier = array_merge($supplier, $data, ['updated_at' => now()->toDateTimeString()]);
+               break;
+           }
+       }
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+       Session::put(self::SESSION_KEY, $suppliers);
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+       return (object) $supplier;
+   }
+   ```
 
-## Laravel Sponsors
+3. **Implement validation for all editable properties in create and update scenarios**:  
+   The project is focused on the Supplier model. It includes more than four editable properties, with validation rules defined in the `SupplierUpdateRequest` class. Below is the validation logic for various fields:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+   ```php
+    namespace App\Http\Requests;
+    
+    use Illuminate\Foundation\Http\FormRequest;
+    use Mantax559\LaravelHelpers\Helpers\RedirectHelper;
+    use Mantax559\LaravelHelpers\Helpers\ValidationHelper;
+    
+    class SupplierUpdateRequest extends FormRequest
+    {
+        public function rules(): array
+        {
+            return [
+                'action' => ValidationHelper::getInArrayRules(values: [RedirectHelper::SaveAndStay, RedirectHelper::SaveAndClose]),
+                'company_name' => ValidationHelper::getStringRules(),
+                'company_code' => ValidationHelper::getStringRules(),
+                'company_vat_number' => ValidationHelper::getStringRules(required: false),
+                'company_address' => ValidationHelper::getStringRules(),
+                'responsible_person' => ValidationHelper::getStringRules(),
+                'contact_person' => ValidationHelper::getStringRules(),
+                'contact_phone' => ValidationHelper::getStringRules(),
+                'alternate_contact_phone' => ValidationHelper::getStringRules(required: false),
+                'email' => ValidationHelper::getStringRules(),
+                'alternate_email' => ValidationHelper::getStringRules(required: false),
+                'billing_email' => ValidationHelper::getStringRules(),
+                'alternate_billing_email' => ValidationHelper::getStringRules(required: false),
+                'certificate_code' => ValidationHelper::getStringRules(),
+                'is_fsc' => ValidationHelper::getBooleanRules(),
+                'validation_date' => ValidationHelper::getDateRules(),
+                'expiry_date' => ValidationHelper::getDateRules(),
+                'comments' => ValidationHelper::getTextRules(required: false),
+            ];
+        }
+    }
+   ```
 
-### Premium Partners
+4. **Dependency Injection (DI) and Inversion of Control (IoC)**:  
+   Interfaces are used to facilitate DI and IoC. The `SupplierServiceInterface`, its implementation (`SupplierService`), and the usage in the `SupplierController` demonstrate this. Below are the examples:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+   - **SupplierServiceInterface**:
 
-## Contributing
+   ```php
+    namespace App\Contracts;
+    
+    use Illuminate\Pagination\LengthAwarePaginator;
+    
+    interface SupplierServiceInterface
+    {
+        public function getAll(array $filter): LengthAwarePaginator;
+    
+        public function store(array $data): object;
+    
+        public function update(int $id, array $data): object;
+    
+        public function destroy(int $id): void;
+    
+        public function getById(int $id): object;
+    }
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   - **SupplierService Implementation**:
 
-## Code of Conduct
+   ```php
+    namespace App\Services;
+    
+    use App\Contracts\SupplierServiceInterface;
+    use Illuminate\Pagination\LengthAwarePaginator;
+    use Illuminate\Support\Facades\Session;
+    
+    class SupplierService implements SupplierServiceInterface
+    {
+        public const SESSION_KEY = 'suppliers';
+    
+        public function getAll(array $filter): LengthAwarePaginator
+        {
+            $suppliers = Session::get(self::SESSION_KEY, []);
+    
+            if (isset($filter['search'])) {
+                $suppliers = array_filter($suppliers, function ($supplier) use ($filter) {
+                    foreach ([
+                        'name', 'code', 'vat_code', 'address', 'responsible_person',
+                        'contact_person', 'contact_phone', 'alternate_contact_phone',
+                        'email', 'alternate_email', 'billing_email', 'alternate_billing_email',
+                        'certificate_code', 'comments',
+                    ] as $field) {
+                        if (stripos($supplier[$field] ?? '', $filter['search']) !== false) {
+                            return true;
+                        }
+                    }
+    
+                    return false;
+                });
+            }
+    
+            $suppliers = array_map(fn ($supplier) => (object) $supplier, $suppliers);
+    
+            $suppliers = collect($suppliers)->sortByDesc('id')->values();
+    
+            $perPage = 5;
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $pagedData = $suppliers->slice(($currentPage - 1) * $perPage, $perPage)->all();
+    
+            return new LengthAwarePaginator($pagedData, $suppliers->count(), $perPage, $currentPage, [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]);
+        }
+    
+        public function store(array $data): object
+        {
+            unset($data['action']);
+            $suppliers = Session::get(self::SESSION_KEY, []);
+    
+            $id = count($suppliers) > 0 ? max(array_column($suppliers, 'id')) + 1 : 1;
+            $timestamp = now()->toDateTimeString();
+    
+            $data = array_merge($data, [
+                'id' => $id,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+    
+            $suppliers[] = $data;
+            Session::put(self::SESSION_KEY, $suppliers);
+    
+            return (object) $data;
+        }
+    
+        public function update(int $id, array $data): object
+        {
+            unset($data['action']);
+            $suppliers = Session::get(self::SESSION_KEY, []);
+    
+            foreach ($suppliers as &$supplier) {
+                if (cmprint($supplier['id'], $id)) {
+                    $supplier = array_merge($supplier, $data, ['updated_at' => now()->toDateTimeString()]);
+                    break;
+                }
+            }
+    
+            Session::put(self::SESSION_KEY, $suppliers);
+    
+            return (object) $supplier;
+        }
+    
+        public function destroy(int $id): void
+        {
+            $suppliers = Session::get(self::SESSION_KEY, []);
+            $suppliers = array_filter($suppliers, fn ($supplier) => ! cmprint($supplier['id'], $id));
+            Session::put(self::SESSION_KEY, $suppliers);
+        }
+    
+        public function getById(int $id): object
+        {
+            $suppliers = Session::get(SupplierService::SESSION_KEY, []);
+    
+            return (object) collect($suppliers)->firstWhere('id', $id);
+        }
+    }
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   - **SupplierController**:
 
-## Security Vulnerabilities
+   ```php
+    namespace App\Http\Controllers;
+    
+    use App\Contracts\SupplierServiceInterface;
+    use App\Http\Requests\SupplierIndexRequest;
+    use App\Http\Requests\SupplierStoreRequest;
+    use App\Http\Requests\SupplierUpdateRequest;
+    use Illuminate\Http\RedirectResponse;
+    use Illuminate\View\View;
+    
+    class SupplierController extends Controller
+    {
+        public function __construct(private readonly SupplierServiceInterface $supplierService) {}
+    
+        public function index(SupplierIndexRequest $request): View
+        {
+            $filter = $request->validated();
+            $suppliers = $this->supplierService->getAll($filter);
+    
+            return view('suppliers.index', compact('filter', 'suppliers'));
+        }
+    
+        public function create(): View
+        {
+            return view('suppliers.form');
+        }
+    
+        public function store(SupplierStoreRequest $request): RedirectResponse
+        {
+            $this->supplierService->store($request->validated());
+    
+            return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
+        }
+    
+        public function show(int $id): View
+        {
+            $supplier = $this->supplierService->getById($id);
+    
+            return view('suppliers.show', compact('supplier'));
+        }
+    
+        public function edit(int $id): View
+        {
+            $supplier = $this->supplierService->getById($id);
+    
+            return view('suppliers.form', compact('supplier'));
+        }
+    
+        public function update(int $id, SupplierUpdateRequest $request): RedirectResponse
+        {
+            $this->supplierService->update($id, $request->validated());
+    
+            return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
+        }
+    
+        public function destroy(int $id): RedirectResponse
+        {
+            $this->supplierService->destroy($id);
+    
+            return back()->with('success', __('Entry successfully deleted!'));
+        }
+    }
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Instructions to Run the Laravel Project
 
-## License
+To set up and run this Laravel project, follow these steps:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/mantax559/vu-ssad-lab1
+   cd vu-ssad-lab1
+   ```
+
+2. **Install Dependencies**:
+   Make sure you have Composer installed, then run:
+   ```bash
+   composer install
+   ```
+
+3. **Set Up Environment**:
+   Copy the `.env.example` file to `.env` and configure the necessary environment variables (e.g., database connection, application key).
+
+4. **Generate Application Key**:
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Run the Application**:
+   Start the Laravel development server using:
+   ```bash
+   php artisan serve
+   ```
+
+6. **Access the Application**:
+   Open a browser and navigate to:
+   ```
+   http://127.0.0.1:8000
+   ```
+
+The application is now ready to use for managing suppliers.
