@@ -9,10 +9,10 @@ class Supplier extends Model
     protected $table = 'suppliers';
 
     protected $fillable = [
-        'name',
-        'code',
-        'vat_code',
-        'address',
+        'company_name',
+        'company_code',
+        'company_vat_number',
+        'company_address',
         'responsible_person',
         'contact_person',
         'contact_phone',

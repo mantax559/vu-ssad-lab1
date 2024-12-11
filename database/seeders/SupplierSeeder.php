@@ -11,10 +11,10 @@ class SupplierSeeder extends Seeder
     {
         for ($index = 1; $index <= config('seeder.base_seeding_sizes.suppliers') * config('seeder.multiplier'); $index++) {
             $data[] = [
-                'name' => fake()->company(),
-                'code' => fake()->unique()->bothify('#########'),
-                'vat_code' => fake()->optional()->bothify('LT#########'),
-                'address' => fake()->address(),
+                'company_name' => fake()->company(),
+                'company_code' => fake()->unique()->bothify('#########'),
+                'company_vat_number' => fake()->optional()->bothify('LT#########'),
+                'company_address' => fake()->address(),
                 'responsible_person' => fake()->name(),
                 'contact_person' => fake()->name(),
                 'contact_phone' => fake()->phoneNumber(),
@@ -31,7 +31,7 @@ class SupplierSeeder extends Seeder
             ];
         }
 
-        foreach (array_chunk(unique_array($data, 'code'), config('seeder.chunk_size')) as $data) {
+        foreach (array_chunk(unique_array($data, 'company_code'), config('seeder.chunk_size')) as $data) {
             Supplier::insert($data);
         }
     }

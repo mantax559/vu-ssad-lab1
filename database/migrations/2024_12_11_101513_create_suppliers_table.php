@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create(TableHelper::getName(Supplier::class), function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code')->unique();
-            $table->string('vat_code')->nullable();
-            $table->string('address');
+            $table->string('company_name');
+            $table->string('company_code')->unique();
+            $table->string('company_vat_number')->nullable();
+            $table->string('company_address');
             $table->string('responsible_person');
             $table->string('contact_person');
             $table->string('contact_phone');

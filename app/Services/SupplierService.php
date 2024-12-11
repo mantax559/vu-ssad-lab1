@@ -36,11 +36,15 @@ class SupplierService
 
     public function store(array $data): Supplier
     {
+        unset($data['action']);
+
         return Supplier::create($data);
     }
 
     public function update(Supplier $supplier, array $data): Supplier
     {
+        unset($data['action']);
+
         $supplier->update($data);
 
         return $supplier;

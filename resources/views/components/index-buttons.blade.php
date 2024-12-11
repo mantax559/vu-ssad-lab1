@@ -1,12 +1,10 @@
-@props(['routeCreate', 'routeCreatePermission', 'routeIndex'])
+@props(['routeCreate', 'routeIndex'])
 
 <div class="btn-group">
     @isset($routeCreate)
-        @can($routeCreatePermission)
-            <a class="btn btn-primary" href="{{ $routeCreate }}">
-                <i class="mdi mdi-plus fs-15"></i> <span class="d-none d-xl-inline">{{ __('Create') }}</span>
-            </a>
-        @endcan
+        <a class="btn btn-primary" href="{{ $routeCreate }}">
+            <i class="mdi mdi-plus fs-15"></i> <span class="d-none d-xl-inline">{{ __('Create') }}</span>
+        </a>
     @endisset
     {!! $slot !!}
     <a class="btn btn-outline-primary" href="{{ $routeIndex }}">

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\LogStatusEnum;
+use App\Services\LogService;
 use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model

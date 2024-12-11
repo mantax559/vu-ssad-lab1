@@ -14,13 +14,13 @@ class SupplierStoreRequest extends FormRequest
     {
         return [
             'action' => ValidationHelper::getInArrayRules(values: [RedirectHelper::SaveAndStay, RedirectHelper::SaveAndClose]),
-            'name' => ValidationHelper::getStringRules(),
-            'code' => ValidationHelper::mergeRules(
+            'company_name' => ValidationHelper::getStringRules(),
+            'company_code' => ValidationHelper::mergeRules(
                 ValidationHelper::getUniqueRules(table: TableHelper::getName(Supplier::class), ignore: $this->supplier),
                 ValidationHelper::getStringRules(),
             ),
-            'vat_code' => ValidationHelper::getStringRules(required: false),
-            'address' => ValidationHelper::getStringRules(),
+            'company_vat_number' => ValidationHelper::getStringRules(required: false),
+            'company_address' => ValidationHelper::getStringRules(),
             'responsible_person' => ValidationHelper::getStringRules(),
             'contact_person' => ValidationHelper::getStringRules(),
             'contact_phone' => ValidationHelper::getStringRules(),
