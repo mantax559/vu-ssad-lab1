@@ -6,7 +6,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface SupplierServiceInterface
 {
-    public function list(array $filter): LengthAwarePaginator;
+    public function getAll(array $filter): LengthAwarePaginator;
 
     public function store(array $data): object;
 

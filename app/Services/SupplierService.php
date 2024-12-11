@@ -10,7 +10,7 @@ class SupplierService implements SupplierServiceInterface
 {
     public const SESSION_KEY = 'suppliers';
 
-    public function list(array $filter): LengthAwarePaginator
+    public function getAll(array $filter): LengthAwarePaginator
     {
         $suppliers = Session::get(self::SESSION_KEY, []);
 

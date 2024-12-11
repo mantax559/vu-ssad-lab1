@@ -16,7 +16,7 @@ class SupplierController extends Controller
     public function index(SupplierIndexRequest $request): View
     {
         $filter = $request->validated();
-        $suppliers = $this->supplierService->list($filter);
+        $suppliers = $this->supplierService->getAll($filter);
 
         return view('suppliers.index', compact('filter', 'suppliers'));
     }
@@ -28,8 +28,7 @@ class SupplierController extends Controller
 
     public function store(SupplierStoreRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $this->supplierService->store($data);
+        $this->supplierService->store($request->validated());
 
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
@@ -50,8 +49,7 @@ class SupplierController extends Controller
 
     public function update(int $supplierId, SupplierUpdateRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $this->supplierService->update($supplierId, $data);
+        $this->supplierService->update($supplierId, $request->validated());
 
         return redirect()->route('suppliers.index')->with('success', __('Entry successfully saved!'));
     }
