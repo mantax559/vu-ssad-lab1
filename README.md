@@ -19,6 +19,7 @@ This project demonstrates extending the Supplier Management System to use APIs f
    php artisan test
    ```  
    This ensures that the API contracts are fully tested and validated.
+5. 
    ![Test results screenshot](https://img001.prntscr.com/file/img001/0QEDJS0FSmiSXigsod59VQ.jpeg)
 
 ## Instructions to Run the Laravel Project
