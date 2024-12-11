@@ -2,17 +2,18 @@
 
 namespace App\Contracts;
 
+use App\Models\Supplier;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface SupplierServiceInterface
 {
     public function getAll(array $filter): LengthAwarePaginator;
 
-    public function store(array $data): object;
+    public function store(array $data): Supplier;
 
-    public function update(int $id, array $data): object;
+    public function update(Supplier $supplier, array $data): Supplier;
 
-    public function destroy(int $id): void;
+    public function destroy(Supplier $supplier): void;
 
-    public function getById(int $id): object;
+    public function getById(int $id): Supplier;
 }

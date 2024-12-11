@@ -3,96 +3,61 @@
 namespace App\Services;
 
 use App\Contracts\SupplierServiceInterface;
+use App\Models\Supplier;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Session;
+use Mantax559\LaravelHelpers\Helpers\SessionHelper;
 
 class SupplierService implements SupplierServiceInterface
 {
-    public const SESSION_KEY = 'suppliers';
-
     public function getAll(array $filter): LengthAwarePaginator
     {
-        $suppliers = Session::get(self::SESSION_KEY, []);
+        session()->put(SessionHelper::getUrlKey(Supplier::class), request()->fullUrl());
 
-        if (isset($filter['search'])) {
-            $suppliers = array_filter($suppliers, function ($supplier) use ($filter) {
-                foreach ([
-                    'name', 'code', 'vat_code', 'address', 'responsible_person',
-                    'contact_person', 'contact_phone', 'alternate_contact_phone',
-                    'email', 'alternate_email', 'billing_email', 'alternate_billing_email',
-                    'certificate_code', 'comments',
-                ] as $field) {
-                    if (stripos($supplier[$field] ?? '', $filter['search']) !== false) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        }
-
-        $suppliers = array_map(fn ($supplier) => (object) $supplier, $suppliers);
-
-        $suppliers = collect($suppliers)->sortByDesc('id')->values();
-
-        $perPage = 5;
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $pagedData = $suppliers->slice(($currentPage - 1) * $perPage, $perPage)->all();
-
-        return new LengthAwarePaginator($pagedData, $suppliers->count(), $perPage, $currentPage, [
-            'path' => LengthAwarePaginator::resolveCurrentPath(),
-            'pageName' => 'page',
-        ]);
+        return Supplier::query()
+            ->when(isset($filter['search']), fn ($q) => $q->whereLike([
+                'name',
+                'code',
+                'vat_code',
+                'address',
+                'responsible_person',
+                'contact_person',
+                'contact_phone',
+                'alternate_contact_phone',
+                'email',
+                'alternate_email',
+                'billing_email',
+                'alternate_billing_email',
+                'certificate_code',
+                'comments',
+            ], $filter['search']))
+            ->orderByDesc('id')
+            ->paginate(setting('paginate'))
+            ->onEachSide(setting('on_each_side'));
     }
 
-    public function store(array $data): object
+    public function store(array $data): Supplier
     {
         unset($data['action']);
-        $suppliers = Session::get(self::SESSION_KEY, []);
 
-        $id = count($suppliers) > 0 ? max(array_column($suppliers, 'id')) + 1 : 1;
-        $timestamp = now()->toDateTimeString();
-
-        $data = array_merge($data, [
-            'id' => $id,
-            'created_at' => $timestamp,
-            'updated_at' => $timestamp,
-        ]);
-
-        $suppliers[] = $data;
-        Session::put(self::SESSION_KEY, $suppliers);
-
-        return (object) $data;
+        return Supplier::create($data);
     }
 
-    public function update(int $id, array $data): object
+    public function update(Supplier $supplier, array $data): Supplier
     {
         unset($data['action']);
-        $suppliers = Session::get(self::SESSION_KEY, []);
 
-        foreach ($suppliers as &$supplier) {
-            if (cmprint($supplier['id'], $id)) {
-                $supplier = array_merge($supplier, $data, ['updated_at' => now()->toDateTimeString()]);
-                break;
-            }
-        }
+        $supplier->update($data);
 
-        Session::put(self::SESSION_KEY, $suppliers);
-
-        return (object) $supplier;
+        return $supplier;
     }
 
-    public function destroy(int $id): void
+    public function destroy(Supplier $supplier): void
     {
-        $suppliers = Session::get(self::SESSION_KEY, []);
-        $suppliers = array_filter($suppliers, fn ($supplier) => ! cmprint($supplier['id'], $id));
-        Session::put(self::SESSION_KEY, $suppliers);
+        $supplier->delete();
     }
 
-    public function getById(int $id): object
+    public function getById(int $id): Supplier
     {
-        $suppliers = Session::get(SupplierService::SESSION_KEY, []);
-
-        return (object) collect($suppliers)->firstWhere('id', $id);
+        return Supplier::query()->findOrFail($id);
     }
 }
