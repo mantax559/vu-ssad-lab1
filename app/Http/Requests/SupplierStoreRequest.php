@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Mantax559\LaravelHelpers\Helpers\RedirectHelper;
 use Mantax559\LaravelHelpers\Helpers\ValidationHelper;
 
 class SupplierStoreRequest extends FormRequest
@@ -11,7 +10,6 @@ class SupplierStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'action' => ValidationHelper::getInArrayRules(values: [RedirectHelper::SaveAndStay, RedirectHelper::SaveAndClose]),
             'company_name' => ValidationHelper::getStringRules(),
             'company_code' => ValidationHelper::getStringRules(),
             'company_vat_number' => ValidationHelper::getStringRules(required: false),

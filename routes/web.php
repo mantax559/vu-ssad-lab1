@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication routes
@@ -48,14 +47,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(HomeController::class)->group(function () {
         Route::get(trans('routes.home'), 'index')->name('home');
     });
-});
-
-Route::group(['as' => 'suppliers.'], function () {
-    Route::get('suppliers', [SupplierController::class, 'index'])->name('index');
-    Route::get('suppliers/create', [SupplierController::class, 'create'])->name('create');
-    Route::post('suppliers', [SupplierController::class, 'store'])->name('store');
-    Route::get('suppliers/{id}/show', [SupplierController::class, 'show'])->name('show');
-    Route::get('suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('edit');
-    Route::put('suppliers/{id}', [SupplierController::class, 'update'])->name('update');
-    Route::delete('suppliers/{id}', [SupplierController::class, 'destroy'])->name('destroy');
 });
