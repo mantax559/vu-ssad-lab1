@@ -1,4 +1,3 @@
-
 # Supplier Management System (API-Based)
 
 ## Task Description
