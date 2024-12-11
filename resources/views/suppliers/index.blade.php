@@ -13,14 +13,14 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row gx-3 gy-2 col-auto-width">
-                <x-form::input id="search" title="{{ __('Search') }}" name="search" value="{{ $filter['search'] ?? null }}"/>
+                <x-form::input id="search" title="{{ __('Search') }}" name="search" value="{{ $filter['search'] ?? null }}" />
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between">
-                <button class="btn btn-primary" id="addSupplier">{{ __('Add Supplier') }}</button>
+                <button id="addSupplier" class="btn btn-primary">{{ __('Add Supplier') }}</button>
             </div>
         </div>
         <div id="loading" style="text-align: center; margin: 30px 0;">
@@ -53,51 +53,51 @@
             </div>
         </div>
         <div class="card-footer d-flex justify-content-end">
-            <ul class="pagination justify-content-center" id="pagination"></ul> {{-- TODO: Sugryzti --}}
+            <ul id="pagination" class="pagination justify-content-center"></ul> {{-- TODO: Sugryzti --}}
         </div>
     </div>
 @endsection
 
 @push('modals')
-    <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+    <div id="supplierModal" class="modal fade" aria-hidden="true" aria-labelledby="supplierModalLabel" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="supplierModalLabel">{{ __('Supplier Form') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 id="supplierModalLabel" class="modal-title">{{ __('Supplier Form') }}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="supplierForm">
-                        <input type="hidden" id="supplierId">
-                        <x-form::input class="mb-2" title="{{ __('Company name') }}" name="company_name" id="company_name" required/>
-                        <x-form::input class="mb-2" title="{{ __('Company code') }}" name="company_code" id="company_code" required/>
-                        <x-form::input class="mb-2" title="{{ __('Company VAT number') }}" name="company_vat_number" id="company_vat_number"/>
-                        <x-form::input class="mb-2" title="{{ __('Company address') }}" name="company_address" id="company_address" required/>
-                        <x-form::input class="mb-2" title="{{ __('Responsible person') }}" name="responsible_person" id="responsible_person" required/>
-                        <x-form::input class="mb-2" title="{{ __('Contact person') }}" name="contact_person" id="contact_person" required/>
-                        <x-form::input class="mb-2" title="{{ __('Contact phone') }}" name="contact_phone" id="contact_phone" required/>
-                        <x-form::input class="mb-2" title="{{ __('Alternate contact phone') }}" name="alternate_contact_phone" id="alternate_contact_phone"/>
-                        <x-form::input class="mb-2" title="{{ __('Email') }}" name="email" id="email" required/>
-                        <x-form::input class="mb-2" title="{{ __('Alternate email') }}" name="alternate_email" id="alternate_email"/>
-                        <x-form::input class="mb-2" title="{{ __('Billing email') }}" name="billing_email" id="billing_email" required/>
-                        <x-form::input class="mb-2" title="{{ __('Alternate billing email') }}" name="alternate_billing_email" id="alternate_billing_email"/>
-                        <x-form::input class="mb-2" title="{{ __('Certificate code') }}" name="certificate_code" id="certificate_code" required/>
-                        <x-form::select class="mb-2" title="{{ __('Is FSC') }}" name="is_fsc" id="is_fsc" required :collection="\App\Helpers\SelectHelper::booleanOptions()"/>
-                        <x-form::input class="mb-2" title="{{ __('Validation date') }}" name="validation_date" id="validation_date" type="datetime" required/>
-                        <x-form::input class="mb-2" title="{{ __('Expiry date') }}" name="expiry_date" id="expiry_date" type="datetime" required/>
-                        <x-form::input class="mb-2" title="{{ __('Comments') }}" name="comments" id="comments" />
-                        <button type="submit" class="btn btn-primary w-100">{{ __('Save') }}</button>
+                        <input id="supplierId" type="hidden">
+                        <x-form::input id="company_name" class="mb-2" title="{{ __('Company name') }}" name="company_name" required />
+                        <x-form::input id="company_code" class="mb-2" title="{{ __('Company code') }}" name="company_code" required />
+                        <x-form::input id="company_vat_number" class="mb-2" title="{{ __('Company VAT number') }}" name="company_vat_number" />
+                        <x-form::input id="company_address" class="mb-2" title="{{ __('Company address') }}" name="company_address" required />
+                        <x-form::input id="responsible_person" class="mb-2" title="{{ __('Responsible person') }}" name="responsible_person" required />
+                        <x-form::input id="contact_person" class="mb-2" title="{{ __('Contact person') }}" name="contact_person" required />
+                        <x-form::input id="contact_phone" class="mb-2" title="{{ __('Contact phone') }}" name="contact_phone" required />
+                        <x-form::input id="alternate_contact_phone" class="mb-2" title="{{ __('Alternate contact phone') }}" name="alternate_contact_phone" />
+                        <x-form::input id="email" class="mb-2" title="{{ __('Email') }}" name="email" required />
+                        <x-form::input id="alternate_email" class="mb-2" title="{{ __('Alternate email') }}" name="alternate_email" />
+                        <x-form::input id="billing_email" class="mb-2" title="{{ __('Billing email') }}" name="billing_email" required />
+                        <x-form::input id="alternate_billing_email" class="mb-2" title="{{ __('Alternate billing email') }}" name="alternate_billing_email" />
+                        <x-form::input id="certificate_code" class="mb-2" title="{{ __('Certificate code') }}" name="certificate_code" required />
+                        <x-form::select id="is_fsc" class="mb-2" title="{{ __('Is FSC') }}" name="is_fsc" required :collection="\App\Helpers\SelectHelper::booleanOptions()" />
+                        <x-form::input id="validation_date" class="mb-2" title="{{ __('Validation date') }}" name="validation_date" type="datetime" required />
+                        <x-form::input id="expiry_date" class="mb-2" title="{{ __('Expiry date') }}" name="expiry_date" type="datetime" required />
+                        <x-form::input id="comments" class="mb-2" title="{{ __('Comments') }}" name="comments" />
+                        <button class="btn btn-primary w-100" type="submit">{{ __('Save') }}</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="supplierModalShow" tabindex="-1" aria-labelledby="supplierModalShowLabel" aria-hidden="true">
+    <div id="supplierModalShow" class="modal fade" aria-hidden="true" aria-labelledby="supplierModalShowLabel" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="supplierModalShowLabel">{{ __('Supplier Show') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 id="supplierModalShowLabel" class="modal-title">{{ __('Supplier Show') }}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
@@ -209,7 +209,7 @@
             const pagination = $('#pagination');
             pagination.empty();
             for (let i = 1; i <= data.last_page; i++) {
-                pagination.append(`<li class="page-item ${i === data.current_page ? 'active' : ''}"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`);
+                pagination.append(`<li class="page-item ${i === data.current_page ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
             }
         }
 
