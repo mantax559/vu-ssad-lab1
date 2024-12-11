@@ -21,40 +21,40 @@ This project demonstrates extending the Supplier Management System to use APIs f
    This ensures that the API contracts are fully tested and validated.
    ![Test results screenshot](https://img001.prntscr.com/file/img001/0QEDJS0FSmiSXigsod59VQ.jpeg)
 
-## Laravel Installation Instructions
+## Instructions to Run the Laravel Project
 
 To set up and run this Laravel project, follow these steps:
 
-1. **Clone the Repository**
+1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/mantax559/vu-ssad-lab1
+   cd vu-ssad-lab1
    ```
 
-2. **Install Dependencies**  
-   Ensure Composer is installed, then run:
+2. **Install Dependencies**:
+   Make sure you have Composer installed, then run:
    ```bash
    composer install
    ```
 
-3. **Set Up Environment**  
-   Configure environment variables by copying the `.env.example` file to `.env` and adjusting settings such as database connection and application key.
+3. **Set Up Environment**:
+   Copy the `.env.example` file to `.env` and configure the necessary environment variables (e.g., database connection, application key).
 
-4. **Generate Application Key**
+4. **Generate Application Key**:
    ```bash
    php artisan key:generate
    ```
 
-5. **Run the Application**  
-   Start the Laravel server:
+5. **Run the Application**:
+   Start the Laravel development server using:
    ```bash
    php artisan serve
    ```
 
-6. **Access the Application**  
-   Navigate to:
+6. **Access the Application**:
+   Open a browser and navigate to:
    ```
    http://127.0.0.1:8000
    ```
 
-The application is now ready for API interaction and testing.
+The application is now ready to use for managing suppliers.
